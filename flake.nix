@@ -13,8 +13,9 @@
 
     packages.x86_64-linux.virtualbox = nixos-generators.nixosGenerate {
       system = "x86_64-linux";
+    
       modules = [
-        ./modules/default.nix
+        ./modules/default.nix        
       ];
       format = "virtualbox";
     };
