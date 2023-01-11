@@ -25,6 +25,16 @@
       format = "virtualbox";
     };
 
+    packages.x86_64-linux.gce = nixos-generators.nixosGenerate {
+      system = "x86_64-linux";
+
+      modules = [
+        ./modules/gce.nix
+      ];
+
+      format = "gce";
+    };
+
     packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
 
     # shell with nixos-container
