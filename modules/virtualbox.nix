@@ -16,6 +16,10 @@
   #   }
   # ;  
 
+  services.openssh.passwordAuthentication = lib.mkDefault true;
+  users.users.root.password = "root";
+  services.openssh.permitRootLogin = lib.mkDefault "yes";
+
   boot.growPartition = true;
   boot.loader.grub.device = "/dev/sda";
 
