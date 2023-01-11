@@ -7,6 +7,5 @@
     (builtins.readFile ./google-compute-config.nix);
   # educational purposes only
   services.openssh.passwordAuthentication = lib.mkForce true;
-  users.users.root.password = "root";
   services.openssh.permitRootLogin = lib.mkForce "yes";
 })
