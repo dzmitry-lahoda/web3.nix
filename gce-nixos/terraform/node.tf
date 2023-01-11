@@ -8,7 +8,7 @@ resource "google_compute_instance" "node" {
   ]
   boot_disk {
     initialize_params {
-      image = "debian-cloud/debian-11"
+      image =  google_compute_image.gce-image.self_link
     }
   }
   metadata = {

@@ -1,13 +1,16 @@
 ({ pkgs, lib, config, options, specialArgs, modulesPath }: {
+
+  imports = [ "${toString modulesPath}/virtualisation/google-compute-image.nix" ];
+
   services.sshd.enable = true;
   services.nginx.enable = true;
 
   networking.firewall.allowedTCPPorts = [ 80 ];
-  
+
   users.users.root.password = "nixos";
   services.openssh.permitRootLogin = lib.mkDefault "yes";
   services.getty.autologinUser = lib.mkDefault "root";
-  
+
   # boot.growPartition = true;
   # boot.loader.grub.device = "/dev/sda";
 
