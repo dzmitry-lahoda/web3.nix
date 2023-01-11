@@ -1,6 +1,6 @@
 resource "google_service_account" "default" {
-  account_id = var.project
-  project    = var.project
+  account_id = "${var.PROJECT}-account"
+  project    = var.PROJECT
 }
 
 resource "time_sleep" "google_service_account-default" {

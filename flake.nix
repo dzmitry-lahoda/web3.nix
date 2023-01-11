@@ -34,14 +34,24 @@
     };
 
     devShell.x86_64-linux = pkgs.mkShell {
-      buildInputs = [
+      buildInputs = with pkgs; [
         nixos-generators.packages.x86_64-linux.nixos-generate
-        pkgs.hello
-        pkgs.direnv
-        pkgs.nix-direnv
-        pkgs.awscli2
+        hello
+        direnv
+        nix-direnv
+        awscli2
+        google-cloud-sdk
+        terraform
       ];
+      shellHook = ''
+      (
+        cd gce-nixos/terraform/
+        terraform init --upgrade
+      )
+      '';
     };
+
+    # hook to run `complete -C aws_completer aws`
 
     crazy = "yes";
   };

@@ -1,8 +1,8 @@
 resource "google_compute_instance" "node" {
-  name         = var.node-name
+  name         = var.NODE_NAME
   machine_type = "n2-standard-2"
 
-  project = var.project
+  project = var.PROJECT
   depends_on = [
     time_sleep.google_service_account-default
   ]

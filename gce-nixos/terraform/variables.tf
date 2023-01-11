@@ -1,7 +1,7 @@
-variable "project" {
+variable "PROJECT" {
   type = string
 }
 
-variable "node-name" {
+variable "NODE_NAME" {
   type = string
 }

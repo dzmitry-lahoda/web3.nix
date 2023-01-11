@@ -1,8 +1,7 @@
 source ./.tfvars
-nix profile install nixpkgs#terraform nixpkgs#google-cloud-sdk
-terraform init --upgrade
+printf $PROJECT
 gcloud auth login
 gcloud auth application-default login
-gcloud projects create $PROJECT
+gcloud projects create $PROJECT --set-as-default
 gcloud config set project $PROJECT
 gcloud services enable compute.googleapis.com
