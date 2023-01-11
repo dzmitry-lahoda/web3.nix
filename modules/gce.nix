@@ -8,4 +8,5 @@
   # educational purposes only
   services.openssh.passwordAuthentication = lib.mkForce true;
   services.openssh.permitRootLogin = lib.mkForce "yes";
+  # add her extra user and my key
 })
