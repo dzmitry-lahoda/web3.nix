@@ -1,0 +1,49 @@
+{
+  "provider": {
+    "google": {
+      "project": "${ var.PROJECT }",
+      "region": "us-central1",
+      "zone": "us-central1-c"
+    }
+  },
+  "resource": {
+    "google_compute_address": {
+      "static": {
+        "name": "ipv4-address"
+      }
+    },
+    "google_service_account": {
+      "default": {
+        "account_id": "${ var.PROJECT }-account",
+        "project": "${ var.PROJECT }"
+      }
+    },
+    "google_storage_bucket": {
+      "gce-image": {
+        "force_destroy": true,
+        "location": "US",
+        "name": "${var.PROJECT}-gce-image"
+      }
+    },
+    "local_file": {
+      "test_import": {
+        "content": "Hello",
+        "filename": "test_import.txt"
+      }
+    },
+    "time_sleep": {
+      "google_service_account-default": {
+        "create_duration": "30s",
+        "depends_on": [
+          "resource.google_service_account.default"
+        ]
+      }
+    }
+  },
+  "variable": {
+    "PROJECT": {
+      "description": "Google Cloud Project ID",
+      "type": "string"
+    }
+  }
+}
