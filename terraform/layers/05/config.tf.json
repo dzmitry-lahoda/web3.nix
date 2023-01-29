@@ -1,4 +1,11 @@
 {
+  "data": {
+    "google_dns_managed_zone": {
+      "env_dns_zone": {
+        "name": "composablefi-tech"
+      }
+    }
+  },
   "provider": {
     "google": {
       "project": "${ var.PROJECT }",
@@ -7,9 +14,73 @@
     }
   },
   "resource": {
+    "google_certificate_manager_certificate": {
+      "root_cert": {
+        "depends_on": [
+          "resource.google_dns_record_set.dns-auth"
+        ],
+        "description": "The wildcard cert",
+        "managed": {
+          "dns_authorizations": [
+            "${resource.google_certificate_manager_dns_authorization.default.id}"
+          ],
+          "domains": [
+            "composablefi.tech",
+            "*.composablefi.tech"
+          ]
+        },
+        "name": "${ var.PROJECT }"
+      }
+    },
+    "google_certificate_manager_certificate_map": {
+      "certificate_map": {
+        "name": "composablefi-tech"
+      }
+    },
+    "google_certificate_manager_certificate_map_entry": {
+      "first_entry": {
+        "certificates": [
+          "${google_certificate_manager_certificate.root_cert.id}"
+        ],
+        "description": "example certificate map entry",
+        "hostname": "composablefi.tech",
+        "map": "${google_certificate_manager_certificate_map.certificate_map.name}",
+        "name": "first-entry"
+      }
+    },
+    "google_certificate_manager_dns_authorization": {
+      "default": {
+        "description": "The default dnss",
+        "domain": "composablefi.tech",
+        "name": "dns-auth"
+      }
+    },
     "google_compute_address": {
       "static": {
         "name": "ipv4-address"
+      }
+    },
+    "google_compute_firewall": {
+      "rules": {
+        "allow": {
+          "ports": [
+            "80",
+            "443",
+            "9000-40000"
+          ],
+          "protocol": "TCP"
+        },
+        "description": "Creates firewall rule targeting tagged instances",
+        "direction": "INGRESS",
+        "name": "my-firewall-rule",
+        "network": "default",
+        "project": "${var.PROJECT}",
+        "source_ranges": [
+          "0.0.0.0/0"
+        ],
+        "target_tags": [
+          "web"
+        ]
       }
     },
     "google_compute_image": {
@@ -50,7 +121,30 @@
           "scopes": [
             "cloud-platform"
           ]
-        }
+        },
+        "tags": [
+          "web"
+        ]
+      }
+    },
+    "google_dns_record_set": {
+      "dns-auth": {
+        "managed_zone": "${data.google_dns_managed_zone.env_dns_zone.name}",
+        "name": "${resource.google_certificate_manager_dns_authorization.default.dns_resource_record.0.name}",
+        "rrdatas": [
+          "${resource.google_certificate_manager_dns_authorization.default.dns_resource_record.0.data}"
+        ],
+        "ttl": 300,
+        "type": "${resource.google_certificate_manager_dns_authorization.default.dns_resource_record.0.type}"
+      },
+      "frontend": {
+        "managed_zone": "${data.google_dns_managed_zone.env_dns_zone.name}",
+        "name": "composablefi.tech.",
+        "rrdatas": [
+          "${google_compute_address.static.address}"
+        ],
+        "ttl": 300,
+        "type": "A"
       }
     },
     "google_service_account": {
