@@ -23,8 +23,12 @@
 
         tfconfig = terranix.lib.terranixConfiguration {
           inherit system;
-          modules = [ ./terranix/config.nix ];
+          modules = [ ./terranix/02.nix ];
+        };
 
+        tfconfig-01 = terranix.lib.terranixConfiguration {
+          inherit system;
+          modules = [ ./terranix/01.nix ];
         };
 
         hello = nixpkgs.legacyPackages.x86_64-linux.hello;
@@ -47,16 +51,30 @@
           format = "gce";
         };
 
+        # apply = pkgs.writeShellApplication {
+        #   name = "apply";
+        #   text = ''            
+        #     TF_VAR_IMAGE_FILE="$(find ${self.packages.x86_64-linux.gce} -type f)"
+        #     TF_VAR_PROJECT="composablefi"
+        #     TF_VAR_NODE_NAME="composablefi"
+        #     export TF_VAR_IMAGE_FILE
+        #     export TF_VAR_NODE_NAME
+        #     export TF_VAR_PROJECT
+        #     cd terraform/layers/05
+        #     if [[ -e config.tf.json ]]; then rm -f config.tf.json; fi
+        #     cp ${self.packages.${system}.tfconfig} config.tf.json \
+        #       && ${pkgs.terraform}/bin/terraform init \
+        #       && ${pkgs.terraform}/bin/terraform apply -auto-approve
+        #   '';
+        # };
+
         apply = pkgs.writeShellApplication {
           name = "apply";
-          text = ''            
-            TF_VAR_IMAGE_FILE="$(find ${self.packages.x86_64-linux.gce} -type f)"
-            TF_VAR_PROJECT="composablefi"
-            export TF_VAR_IMAGE_FILE
-            export TF_VAR_PROJECT
-            cd terraform/layers/05
+          text = ''
+            mkdir -p terraform/layers/01
+            cd terraform/layers/01
             if [[ -e config.tf.json ]]; then rm -f config.tf.json; fi
-            cp ${self.packages.${system}.tfconfig} config.tf.json \
+            cp ${self.packages.${system}.tfconfig-01} config.tf.json \
               && ${pkgs.terraform}/bin/terraform init \
               && ${pkgs.terraform}/bin/terraform apply -auto-approve
           '';
