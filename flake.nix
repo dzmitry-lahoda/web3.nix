@@ -71,6 +71,8 @@
         apply = pkgs.writeShellApplication {
           name = "apply";
           text = ''
+            TF_VAR_PROJECT="composablefi"
+            export TF_VAR_PROJECT
             mkdir -p terraform/layers/01
             cd terraform/layers/01
             if [[ -e config.tf.json ]]; then rm -f config.tf.json; fi

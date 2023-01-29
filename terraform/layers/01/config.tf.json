@@ -1,5 +1,78 @@
 {
   "provider": {
-    "gandi": {}
+    "gandi": {
+      "key": "${var.GANDI_KEY}"
+    }
+  },
+  "resource": {
+    "gandi_domain": {
+      "domain": {
+        "admin": {
+          "city": "Funchal",
+          "country": "PT",
+          "email": "dzmitry@lahoda.pro",
+          "family_name": "lahoda",
+          "given_name": "dzmtiry",
+          "phone": "+351.914069170",
+          "street_addr": "Rua Jaime Moniz 22 Edificio Caires",
+          "type": "person",
+          "zip": "9060-343"
+        },
+        "autorenew": true,
+        "billing": {
+          "city": "Funchal",
+          "country": "PT",
+          "email": "dzmitry@lahoda.pro",
+          "family_name": "lahoda",
+          "given_name": "dzmtiry",
+          "phone": "+351.914069170",
+          "street_addr": "Rua Jaime Moniz 22 Edificio Caires",
+          "type": "person",
+          "zip": "9060-343"
+        },
+        "lifecycle": {
+          "prevent_destroy": true
+        },
+        "name": "composablefi.tech",
+        "owner": {
+          "city": "Funchal",
+          "country": "PT",
+          "email": "dzmitry@lahoda.pro",
+          "family_name": "lahoda",
+          "given_name": "dzmtiry",
+          "phone": "+351.914069170",
+          "street_addr": "Rua Jaime Moniz 22 Edificio Caires",
+          "type": "person",
+          "zip": "9060-343"
+        },
+        "tech": {
+          "city": "Funchal",
+          "country": "PT",
+          "email": "dzmitry@lahoda.pro",
+          "family_name": "lahoda",
+          "given_name": "dzmtiry",
+          "phone": "+351.914069170",
+          "street_addr": "Rua Jaime Moniz 22 Edificio Caires",
+          "type": "person",
+          "zip": "9060-343"
+        }
+      }
+    }
+  },
+  "terraform": {
+    "required_providers": {
+      "gandi": {
+        "source": "go-gandi/gandi"
+      }
+    }
+  },
+  "variable": {
+    "GANDI_KEY": {
+      "type": "string"
+    },
+    "PROJECT": {
+      "description": "Google Cloud Project ID",
+      "type": "string"
+    }
   }
 }
