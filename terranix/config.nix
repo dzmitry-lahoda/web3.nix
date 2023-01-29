@@ -1,9 +1,15 @@
 { config, lib, options, specialArgs }:
 let var = options.variable;
 in rec {
-  variable.PROJECT = {
-    type = "string";
-    description = "Google Cloud Project ID";
+  variable = {
+    PROJECT = {
+      type = "string";
+      description = "Google Cloud Project ID";
+    };
+    IMAGE_FILE = {
+      type = "string";
+      description = "NixOS image file for Google Cloud";
+    };
   };
 
   resource = {
@@ -35,20 +41,23 @@ in rec {
       };
     };
 
-#     resource "google_compute_image" "gce-image" {
-#   name = "gce-image"
+    google_compute_image = {
+      gce-image = {
+        name = "gce-image";
+        raw_disk = {
+          source = "\${resource.google_storage_bucket_object.gce-image-gz.self_link}";
+        };
+      };
 
-#   raw_disk {
-#     source = google_storage_bucket_object.gce-image-gz.self_link
-#   }
-# }
+    };
 
-
-# resource "google_storage_bucket_object" "gce-image-gz" {
-#  name = "${var.PROJECT}-image.tar.gz"
-#   source = "../../result/nixos-image-22.11.20230101.0bf3109-x86_64-linux.raw.tar.gz"
-#   bucket = google_storage_bucket.gce-image.name
-# }
+    google_storage_bucket_object = {
+      gce-image-gz = {
+        name = "\${var.PROJECT}-image.tar.gz";
+        source = "\${var.IMAGE_FILE}";
+        bucket = "\${resource.google_storage_bucket.gce-image.name}";
+      };
+    };
 
   };
 

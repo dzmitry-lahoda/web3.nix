@@ -12,6 +12,14 @@
         "name": "ipv4-address"
       }
     },
+    "google_compute_image": {
+      "gce-image": {
+        "name": "gce-image",
+        "raw_disk": {
+          "source": "${resource.google_storage_bucket_object.gce-image-gz.self_link}"
+        }
+      }
+    },
     "google_service_account": {
       "default": {
         "account_id": "${ var.PROJECT }-account",
@@ -23,6 +31,13 @@
         "force_destroy": true,
         "location": "US",
         "name": "${var.PROJECT}-gce-image"
+      }
+    },
+    "google_storage_bucket_object": {
+      "gce-image-gz": {
+        "bucket": "${resource.google_storage_bucket.gce-image.name}",
+        "name": "${var.PROJECT}-image.tar.gz",
+        "source": "${var.IMAGE_FILE}"
       }
     },
     "local_file": {
@@ -41,6 +56,10 @@
     }
   },
   "variable": {
+    "IMAGE_FILE": {
+      "description": "NixOS image file for Google Cloud",
+      "type": "string"
+    },
     "PROJECT": {
       "description": "Google Cloud Project ID",
       "type": "string"

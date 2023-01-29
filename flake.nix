@@ -16,17 +16,16 @@
     let
       pkgs = nixpkgs.legacyPackages.x86_64-linux;
       system = "x86_64-linux";
-      terrafromConfiguration = terranix.lib.terranixConfiguration {
-        inherit system;
-        modules = [ ./terranix/config.nix ];
-
-      };
 
     in rec {
 
       packages.x86_64-linux = {
 
-        tfconfig = terrafromConfiguration;
+        tfconfig = terranix.lib.terranixConfiguration {
+          inherit system;
+          modules = [ ./terranix/config.nix ];
+
+        };
 
         hello = nixpkgs.legacyPackages.x86_64-linux.hello;
 
@@ -43,20 +42,26 @@
 
         gce = nixos-generators.nixosGenerate {
           system = "x86_64-linux";
-
           modules = [ ./modules/gce.nix ];
 
           format = "gce";
         };
 
-        apply = pkgs.writeShellScriptBin "apply" ''
-            export TF_VAR_PROJECT=composablefi
+        apply = pkgs.writeShellApplication {
+          name = "apply";
+          text = ''            
+            TF_VAR_IMAGE_FILE="$(find ${self.packages.x86_64-linux.gce} -type f)"
+            TF_VAR_PROJECT="composablefi"
+            export TF_VAR_IMAGE_FILE
+            export TF_VAR_PROJECT
             cd terraform/layers/05
             if [[ -e config.tf.json ]]; then rm -f config.tf.json; fi
             cp ${self.packages.${system}.tfconfig} config.tf.json \
               && ${pkgs.terraform}/bin/terraform init \
               && ${pkgs.terraform}/bin/terraform apply -auto-approve
-        '';
+          '';
+        };
+
         default = self.packages.x86_64-linux.hello;
       };
 
