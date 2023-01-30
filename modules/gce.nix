@@ -1,12 +1,49 @@
 ({ pkgs, lib, config, options, specialArgs, modulesPath }:
   let size = 100 * 1024;
 
+# {
+#   nix = {
+#     settings = {
+#       substituters = [
+#         "https://composable-community.cachix.org"
+#       ];
+#       trusted-public-keys = [
+#         "composable-community.cachix.org-1:GG4xJNpXJ+J97I8EyJ4qI5tRTAJ4i7h+NK2Z32I8sK8="
+#       ];
+#     };
+#   };
+# }
+
+
+# { pkgs, lib, ... }:
+
+# let
+#   folder = ./cachix;
+#   toImport = name: value: folder + ("/" + name);
+#   filterCaches = key: value: value == "regular" && lib.hasSuffix ".nix" key;
+#   imports = lib.mapAttrsToList toImport (lib.filterAttrs filterCaches (builtins.readDir folder));
+# in {
+#   inherit imports;
+#   nix.settings.substituters = ["https://cache.nixos.org/"];
+# }
+
+# imports = [ ./cachix.nix ];
+
   in {
     virtualisation.googleComputeImage.configFile =
       builtins.toFile "configuration.nix"
       (builtins.readFile ./google-compute-config.nix);
     virtualisation.googleComputeImage.diskSize = size;
 
+    nix = {
+      package = pkgs.nixFlakes;
+      extraOptions = ''
+        experimental-features = nix-command flakes
+        sandbox = relaxed
+      '';
+
+      trustedUsers = [ "root" "dzmitry_lahoda_gmail_com" "admin" ];
+    };
 
     imports =
       [ "${toString modulesPath}/virtualisation/google-compute-image.nix" ];

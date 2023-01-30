@@ -158,7 +158,7 @@ in rec {
     google_compute_instance = {
       node = {
         name = "\${var.NODE_NAME}";
-        machine_type = "n2-standard-2";
+        machine_type = "n2-standard-4";
 
         project = "\${var.PROJECT}";
         depends_on = [ "time_sleep.google_service_account-default" ];
